@@ -30,7 +30,7 @@ port = 5200
 # Set up structured logging
 logging.basicConfig(level=logging.INFO)
 
-@app.route("/submitPdf", methods=['POST'])
+@app.route("/submit-pdf", methods=['POST'])
 def convert_pdf_to_data():
     # Check if file is in the request
     file = request.files.get('file')
@@ -84,7 +84,7 @@ def get_categories_for_user() -> Tuple[Dict[str, Any], int]:
     categories = query_categories_for_dashboard(user_id)
     return jsonify(categories), 200
 
-@app.route("/transactionsByCategory", methods=['GET'])
+@app.route("/transactions-by-category", methods=['GET'])
 def get_transactions_by_category_for_user():
     # Get userId and category from request args
     user_id = get_user_id_from_request()
@@ -97,7 +97,7 @@ def get_transactions_by_category_for_user():
         return jsonify_error("No transactions found for the given category and user", 404)
     return jsonify(transactions), 200
 
-@app.route("/transactionsConfirm", methods=['POST'])
+@app.route("/transactions-confirm", methods=['POST'])
 def confirm_transactions_for_user():
     # Get transactions from body of request
     transactions = request.get_json(silent=True)
@@ -117,19 +117,19 @@ def confirm_transactions_for_user():
     db.confirm_transactions_for_user(transactions, False)
     return jsonify({"message": "Transactions saved successfully"}), 200
 
-@app.route("/transactionsUnconfirmTest", methods=['GET']) # For testing
+@app.route("/transactions-unconfirm-test", methods=['GET']) # For testing
 def unconfirm_transactions_for_user_test():
     # Update all transactions to userConfirm=False (unconfirm)
     db.unconfirm_transactions_for_user_test()
     return jsonify({"message": "Transactions unconfirmed successfully"}), 200
 
-@app.route("/transactionsConfirmTest", methods=['GET']) # For testing
+@app.route("/transactions-confirm-test", methods=['GET']) # For testing
 def confirm_transactions_for_user_test():
     # Update all transactions to userConfirm=False (unconfirm)
     db.confirm_transactions_for_user_test()
     return jsonify({"message": "Transactions confirmed successfully"}), 200
 
-@app.route("/transactionsForDashboard", methods=['GET'])
+@app.route("/transactions-for-dashboard", methods=['GET'])
 def get_transactions_for_dashboard():
     # Get userId from request args
     user_id = get_user_id_from_request()
@@ -137,7 +137,7 @@ def get_transactions_for_dashboard():
     transactions = db.query_transactions_for_dashboard(user_id)
     return jsonify(transactions), 200
 
-@app.route("/transactionsForPieChartByCategory", methods=['GET'])
+@app.route("/transactions-for-piechart-by-category", methods=['GET'])
 def get_transactions_for_piechart_by_category():
     # Get userId from request args
     user_id = get_user_id_from_request()
