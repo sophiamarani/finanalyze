@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
-from constants import allowed_file, gemini_prompt, error_convertapi_convertpdftoexcel
+from constants import allowed_file, gemini_prompt
 from db import Database
 from convert import convert_pdf_to_xlsx
 from gemini import GeminiProcessor
@@ -41,12 +41,13 @@ def convert_pdf_to_data():
         return jsonify_error("Wrong file format", 415)
     # Convert PDF to XLSX
     try:
-        logging.info("Starting PDF to XLSX conversion using ConvertApi")
+        logging.info("Start of PDF to XLSX conversion using ConvertApi")
         xlsx_data = convert_pdf_to_xlsx(file)
         logging.info("Conversion result from ConvertApi: %s", xlsx_data)
+        logging.info("End of PDF to XLSX conversion using ConvertApi")
     except Exception as e:
-        logging.error(f"{error_convertapi_convertpdftoexcel}: {e}")
-        return jsonify_error(error_convertapi_convertpdftoexcel, 500)
+        logging.error("Error in PDF to XLSX conversion using ConvertApi: %s", e)
+        return jsonify_error("Error in PDF to XLSX conversion using ConvertApi", 500)
     # Process XLSX data
     try:
         tabledata_dict_by_page, gemini_categories = process_xlsx_data(xlsx_data)
@@ -155,7 +156,7 @@ def get_user_id_from_request():
     return user_id
 
 def process_xlsx_data(xlsx_data):
-    """Extracts data from XLSX and generates Gemini categories."""
+    """Extracts data from XLSX and generates Gemini categories & data by page."""
     tabledata_dict_by_page = []
     gemini_categories = ""
 

@@ -4,5 +4,3 @@ ALLOWED_EXTENSIONS_PDF = {'pdf'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_PDF
-
-error_convertapi_convertpdftoexcel = "Error in PDF to XLSX conversion using ConvertApi"
