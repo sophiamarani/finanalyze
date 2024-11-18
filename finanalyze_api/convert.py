@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 convertapi_key=os.getenv("CONVERTAPI_KEY")
-pdf_to_xlsx_url = 'https://v2.convertapi.com/convert/pdf/to/xlsx?Secret=' + convertapi_key + '&StoreFile=true'
+pdf_to_xlsx_url = 'https://v2.convertapi.com/convert/pdf/to/xlsx?auth=' + convertapi_key + '&StoreFile=true'
 
 def convert_pdf_to_xlsx(file):
     files={'file':(file.filename, file.stream, file.content_type, file.headers)}
