@@ -112,9 +112,9 @@ def confirm_transactions_for_user():
     confirmed_transactions = [transaction for transaction in transactions if transaction.get('userConfirm', True)]
     # If there are confirmed transactions, update the transactions  entirely
     if confirmed_transactions:
-        db.confirmTransactionsForUser(confirmed_transactions, True)
+        db.confirm_transactions_for_user(confirmed_transactions, True)
     # Update all transactions to 'userConfirm' = True
-    db.confirmTransactionsForUser(transactions, False)
+    db.confirm_transactions_for_user(transactions, False)
     return jsonify({"message": "Transactions saved successfully"}), 200
 
 @app.route("/transactionsUnconfirmTest", methods=['GET']) # For testing

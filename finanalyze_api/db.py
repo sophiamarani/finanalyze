@@ -73,10 +73,10 @@ class Database:
                 transactions.append(transaction_data)
         return transactions
 
-    def confirmTransactionsForUser(self, confirmed_transactions, isChange):
+    def confirm_transactions_for_user(self, confirmed_transactions, is_change):
         # Create a reference to the transactions collection
         transactions_ref = self.db.collection("transactions")
-        if isChange:
+        if is_change:
             for transaction in confirmed_transactions:
                 transaction_ref = transactions_ref.document(transaction.get("id"))
                 if transaction_ref.get().exists:
