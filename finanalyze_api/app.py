@@ -1,5 +1,5 @@
-from typing import Any, Dict, List, Tuple
-from flask import Flask, request, jsonify
+from typing import Any, Dict, List, Tuple, Union
+from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
@@ -73,6 +73,8 @@ def convert_pdf_to_data():
 def get_transactions_for_user() -> Tuple[Dict[str, Any], int]:
     # Get userId from request args
     user_id = get_user_id_from_request()
+    if isinstance(user_id, Tuple):  # Check if an error response was returned
+        return user_id  # Return the error response directly
     # Query transactions for the user
     transactions = query_transactions_for_user(user_id)
     return jsonify(transactions), 200
@@ -81,6 +83,8 @@ def get_transactions_for_user() -> Tuple[Dict[str, Any], int]:
 def get_categories_for_user() -> Tuple[Dict[str, Any], int]:
     # Get userId from request args
     user_id = get_user_id_from_request()
+    if isinstance(user_id, Tuple):  # Check if an error response was returned
+        return user_id  # Return the error response directly
     # Query categories for the dashboard
     categories = query_categories_for_dashboard(user_id)
     return jsonify(categories), 200
@@ -89,6 +93,8 @@ def get_categories_for_user() -> Tuple[Dict[str, Any], int]:
 def get_transactions_by_category_for_user():
     # Get userId and category from request args
     user_id = get_user_id_from_request()
+    if isinstance(user_id, Tuple):  # Check if an error response was returned
+        return user_id  # Return the error response directly
     category = request.args.get('category')
     if not category:
         return jsonify_error("Category is missing or invalid", 400)
@@ -134,6 +140,8 @@ def confirm_transactions_for_user_test():
 def get_transactions_for_dashboard():
     # Get userId from request args
     user_id = get_user_id_from_request()
+    if isinstance(user_id, Tuple):  # Check if an error response was returned
+        return user_id  # Return the error response directly
     # Create a query against the collection
     transactions = db.query_transactions_for_dashboard(user_id)
     return jsonify(transactions), 200
@@ -142,13 +150,15 @@ def get_transactions_for_dashboard():
 def get_transactions_for_piechart_by_category():
     # Get userId from request args
     user_id = get_user_id_from_request()
+    if isinstance(user_id, Tuple):  # Check if an error response was returned
+        return user_id  # Return the error response directly
     # Create a query against the collection
     transactions = db.query_transactions_for_piechart(user_id)
     return jsonify(transactions), 200
 
 ###### Helper functions ######
 
-def get_user_id_from_request():
+def get_user_id_from_request() -> Union[int, Response]:
     """Utility function to retrieve and validate the userId from request args."""
     user_id = request.args.get('userId', type=int)
     if user_id is None:
@@ -185,9 +195,16 @@ def process_xlsx_data(xlsx_data):
     
     return tabledata_dict_by_page, gemini_categories
 
-def jsonify_error(message, status_code):
+def jsonify_error(message: str, status_code: int) -> Tuple[Response, int]:
     """Returns a standardized error JSON response."""
-    return jsonify({"error": message}), status_code
+    response = {
+        "success": False,
+        "error": {
+            "message": message,
+            "status_code": status_code
+        }
+    }
+    return jsonify(response), status_code
 
 def query_transactions_for_user(user_id: int) -> List[Dict[str, Any]]:
     """Query the transactions for a specific user from the database."""
@@ -195,6 +212,7 @@ def query_transactions_for_user(user_id: int) -> List[Dict[str, Any]]:
 
 def query_categories_for_dashboard(user_id: int) -> List[str]:
     """Query the categories for a specific user's dashboard from the database."""
+    print("query_categories_for_dashboard")
     return db.query_categories_for_dashboard(user_id)
 
 if __name__ == '__main__':
