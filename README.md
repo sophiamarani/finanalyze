@@ -49,11 +49,11 @@ Whether you're planning for a big purchase, managing your budget, or simply tryi
       ```
    2. Run to install node modules
       ```bash
-         npm i
+      npm i
       ```
    3. Run to start app
       ```bash
-         npm start
+      npm start
       ```
 
 ### Areas of Improvement
