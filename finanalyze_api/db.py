@@ -29,7 +29,7 @@ class Database:
         # Create a reference to the transactions collection
         transactions_ref = self.db.collection("transactions")
         # Create a query against the 'transactions' collection for user
-        user_transactions_ref = transactions_ref.where(filter=FieldFilter("userId", "==", user_id)).stream()
+        user_transactions_ref = transactions_ref.order_by("category", direction=firestore.Query.ASCENDING).where(filter=FieldFilter("userId", "==", user_id)).stream()
         transactions = []
         for transaction in user_transactions_ref:
             if transaction.exists:
@@ -63,7 +63,7 @@ class Database:
     def query_transactions_bycategory(self, user_id, category):
         # Create a reference to the transactions collection
         transactions_ref = self.db.collection("transactions")
-        # Create a query against the 'transactions' collection for user which have not been confirmed
+        # Create a query against the 'transactions' collection for user and a specific category
         user_transactions_ref = transactions_ref.where(filter=FieldFilter("userId", "==", user_id)).where(filter=FieldFilter("category", "==", category)).stream()
         transactions = []
         for transaction in user_transactions_ref:
@@ -128,7 +128,7 @@ class Database:
     def query_transactions_for_dashboard(self, user_id):
          # Create a reference to the transactions collection
         transactions_ref = self.db.collection("transactions")
-        # Create a query against the 'transactions' collection for user which have not been confirmed
+        # Create a query against the 'transactions' collection for user which have confirmed
         user_transactions_ref = transactions_ref.where(filter=FieldFilter("userId", "==", user_id)).where(filter=FieldFilter("userConfirm", "==", True)).stream()
         transactions = []
         for transaction in user_transactions_ref:

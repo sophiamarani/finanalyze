@@ -76,7 +76,7 @@ def get_transactions_for_user() -> Tuple[Dict[str, Any], int]:
     if isinstance(user_id, Tuple):  # Check if an error response was returned
         return user_id  # Return the error response directly
     # Query transactions for the user
-    transactions = query_transactions_for_user(user_id)
+    transactions = db.query_transactions_for_user(user_id)
     return jsonify(transactions), 200
 
 @app.route("/categories", methods=['GET'])
@@ -86,7 +86,7 @@ def get_categories_for_user() -> Tuple[Dict[str, Any], int]:
     if isinstance(user_id, Tuple):  # Check if an error response was returned
         return user_id  # Return the error response directly
     # Query categories for the dashboard
-    categories = query_categories_for_dashboard(user_id)
+    categories = db.query_categories_for_dashboard(user_id)
     return jsonify(categories), 200
 
 @app.route("/transactions-by-category", methods=['GET'])
@@ -160,7 +160,7 @@ def get_transactions_for_piechart_by_category():
 
 def get_user_id_from_request() -> Union[int, Response]:
     """Utility function to retrieve and validate the userId from request args."""
-    user_id = request.args.get('userId', type=int)
+    user_id = request.args.get('user_id', type=int)
     if user_id is None:
         return jsonify_error("User Id is missing or invalid", 400)
     return user_id
@@ -205,15 +205,6 @@ def jsonify_error(message: str, status_code: int) -> Tuple[Response, int]:
         }
     }
     return jsonify(response), status_code
-
-def query_transactions_for_user(user_id: int) -> List[Dict[str, Any]]:
-    """Query the transactions for a specific user from the database."""
-    return db.query_transactions_for_user(user_id)
-
-def query_categories_for_dashboard(user_id: int) -> List[str]:
-    """Query the categories for a specific user's dashboard from the database."""
-    print("query_categories_for_dashboard")
-    return db.query_categories_for_dashboard(user_id)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=port, debug=True)
