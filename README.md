@@ -42,6 +42,20 @@ Whether you're planning for a big purchase, managing your budget, or simply tryi
       ```
    2. Run the `app.py` file in `finanalyze_api` directory
 
+4. **Run React App**
+   1. Navigate to the `reactapp` directory:
+      ```bash
+      cd reactapp
+      ```
+   2. Run to install node modules
+      ```bash
+         npm i
+      ```
+   3. Run to start app
+      ```bash
+         npm start
+      ```
+
 ### Areas of Improvement
 
 | **Feature**          | **Impact**                      |
