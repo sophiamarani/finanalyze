@@ -36,11 +36,11 @@ Whether you're planning for a big purchase, managing your budget, or simply tryi
      - *Note:* My JSON file is named `gemini-finanalyze-firebase-adminsdk-7r9gn-87f6a7f91b.json`.
 
 3. **Run Python App**
-   1. Navigate to the `finanalyze_api` directory:
+   1. Navigate to the `finanalyze` directory:
       ```bash
-      cd finanalyze_api
+      cd finanalyze
       ```
-   2. Run the `app.py` file
+   2. Run the `app.py` file in `finanalyze_api` directory
 
 ### Areas of Improvement
 
