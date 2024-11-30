@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict, List, Tuple, Union
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
@@ -115,6 +116,9 @@ def confirm_transactions_for_user():
     invalid_transactions = [transaction for transaction in transactions if not bankStatementProcessor.is_valid_transaction(transaction)]
     if invalid_transactions:
         return jsonify_error("Invalid transactions provided", 415)
+    # Convert transDate for each transaction in the list
+    for transaction in transactions:
+        transaction["transDate"] = convert_trans_date(transaction["transDate"])
     # Filter transactions where 'userConfirm' = True
     confirmed_transactions = [transaction for transaction in transactions if transaction.get('userConfirm', True)]
     # If there are confirmed transactions, update the transactions  entirely
@@ -205,6 +209,15 @@ def jsonify_error(message: str, status_code: int) -> Tuple[Response, int]:
         }
     }
     return jsonify(response), status_code
+
+# Function to convert transDate to datetime
+def convert_trans_date(date_str):
+    try:
+        # First, try ISO format (e.g., '2026-07-02T16:00:00.000Z') - from changed dates
+        return datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+    except ValueError:
+        # If ISO format fails, try RFC 1123 format (e.g., 'Sun, 11 Feb 2024 00:00:00 GMT') - from unchanged dates
+        return datetime.strptime(date_str, "%a, %d %b %Y %H:%M:%S GMT")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=port, debug=True)
