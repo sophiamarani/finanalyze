@@ -29,7 +29,7 @@ class Database:
         # Create a reference to the transactions collection
         transactions_ref = self.db.collection("transactions")
         # Create a query against the 'transactions' collection for user
-        user_transactions_ref = transactions_ref.order_by("category", direction=firestore.Query.ASCENDING).where(filter=FieldFilter("userId", "==", user_id)).stream()
+        user_transactions_ref = transactions_ref.where(filter=FieldFilter("userId", "==", user_id)).order_by("category").order_by("transDate",  direction=firestore.Query.DESCENDING).stream()
         transactions = []
         for transaction in user_transactions_ref:
             if transaction.exists:
@@ -80,6 +80,7 @@ class Database:
             for transaction in confirmed_transactions:
                 transaction_ref = transactions_ref.document(transaction.get("id"))
                 if transaction_ref.get().exists:
+                    # transaction.pop("id")
                     transaction_ref.update(transaction)
                 else:
                     print(f"No such transaction with id: '{transaction.get('id')}'")
